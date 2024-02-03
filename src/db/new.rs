@@ -9,3 +9,7 @@ async fn new(dbname: &str) -> mongodb::error::Result<Database> {
     let database = client.database(dbname);
     Ok(database)
 }
+
+async fn new_hessab_db() -> mongodb::error::Result<Database> {
+    new("hessab").await
+}

@@ -1,25 +1,33 @@
-use crate::core::gateway::Gateway;
+use serde::Deserialize;
 use socketioxide::{
     extract::{Data, SocketRef},
     SocketIo,
 };
 
-pub struct GHessab;
+#[derive(Debug, Deserialize)]
+pub struct MyAuthData {
+    pub token: String,
+    pub version: String,
+}
 
-impl Gateway for GHessab {
-    fn new(io: &SocketIo) {
-        io.ns("/hessab.v0", |s: SocketRef| {
-            s.on("event", |s: SocketRef, Data::<String>(data)| {
+pub fn new(io: &SocketIo) {
+    io.ns(
+        "/hessab.v0",
+        |s: SocketRef, Data(auth): Data<MyAuthData>| {
+            if auth.token.is_empty() || auth.version.is_empty() {
+                println!("Invalid token, disconnecting");
+                s.disconnect().ok();
+                return;
+            }
+            println!("g_hessab connect: {}", s.id);
+
+            s.on("event", |s: SocketRef| {
                 s.emit("event", "Hello World!").ok();
             });
-        });
-    }
 
-    fn handle_connection() {
-        todo!()
-    }
-
-    fn handle_disconnect() {
-        todo!()
-    }
+            s.on_disconnect(|s: SocketRef| {
+                println!("g_hessab disconnect: {}", s.id);
+            });
+        },
+    );
 }
