@@ -3,11 +3,11 @@ use socketioxide::{SocketIo, TransportType};
 
 mod config;
 mod db;
-mod g_hessab;
+mod hessab;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    before_server_init();
+    before_server_init().await;
 
     println!("Starting server");
 
