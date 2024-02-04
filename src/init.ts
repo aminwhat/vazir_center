@@ -1,7 +1,5 @@
 import * as clc from 'cli-color';
 import * as dotenv from 'dotenv';
-// import * as child_process from 'child_process';
-// import * as fs from 'fs';
 
 function Abort(error: any): void {
   console.log(clc.red(error));

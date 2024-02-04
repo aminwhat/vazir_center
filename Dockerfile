@@ -44,7 +44,7 @@ COPY --from=builder --chown=node:node /home/node/dist/ ./dist/
 COPY --from=builder --chown=node:node /home/node/.env.production ./
 COPY --from=builder --chown=node:node /home/node/static/ ./static/
 
-LABEL org.opencontainers.image.source = "https://github.com/aminwhat/vazir_hessab"
+LABEL org.opencontainers.image.source = "https://github.com/aminwhat/vazir_center"
 
 RUN mv .env.production .env
 

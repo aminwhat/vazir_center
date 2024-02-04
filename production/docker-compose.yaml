@@ -18,7 +18,7 @@ services:
   server:
     networks:
       - center-network
-    image: 'ghcr.io/aminwhat/vazir_hessab:release'
+    image: 'ghcr.io/aminwhat/vazir_center:master'
     container_name: server
     restart: always
     ports:
