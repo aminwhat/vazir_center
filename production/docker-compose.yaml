@@ -1,0 +1,47 @@
+version: '3'
+
+volumes:
+  mongo-data:
+    driver: local
+    name: mongo-data
+    labels:
+      - vazir
+      - hessab
+      - mongo
+      - db
+
+networks:
+  center-network:
+    name: center-network
+
+services:
+  server:
+    networks:
+      - center-network
+    image: 'ghcr.io/aminwhat/vazir_hessab:release'
+    container_name: server
+    restart: always
+    ports:
+      - 3779:3779
+      # - 3780:3780
+    # env_file:
+    #   - ./.env.production
+    depends_on:
+      - mongo
+
+  mongo:
+    networks:
+      - center-network
+    image: mongo:6.0
+    volumes:
+      - mongo-data:/data/db
+    container_name: mongo
+    restart: always
+    hostname: mongo
+    expose:
+      - 27117:27017
+    ports:
+      - 27117:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=aminwhat
+      - MONGO_INITDB_ROOT_PASSWORD=amin5623

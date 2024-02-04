@@ -1,0 +1,1 @@
+echo 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 | sudo docker login ghcr.io -u aminwhat --password-stdin 
