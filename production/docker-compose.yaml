@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 volumes:
   mongo-data:
@@ -18,12 +18,12 @@ services:
   server:
     networks:
       - center-network
-    image: 'ghcr.io/aminwhat/vazir_hessab:release'
+    image: "ghcr.io/aminwhat/vazir_center:master"
     container_name: server
     restart: always
     ports:
       - 3779:3779
-      # - 3780:3780
+      - 3780:3780
     # env_file:
     #   - ./.env.production
     depends_on:
