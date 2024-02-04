@@ -1,0 +1,1 @@
+png ratio from the original logo: 165%
