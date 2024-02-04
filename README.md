@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./stuff/Minds/central.jpg" width="300" alt="Vazir Central Logo" />
+  <img src="./stuffs/Minds/central.jpg" width="300" alt="Vazir Central Logo" />
 </p>
 
   <p align="center">A Central Server for all <a href="http://vazir.io" target="_blank">Vazir</a> Applications and Platforms.</p>
