@@ -61,7 +61,9 @@ async function bootstrap(production: boolean): Promise<void> {
   // );
   // app.use(passport.initialize());
   // app.use(passport.session());
-  app.use(vhost('api.vazir.io', function (req, res) {}));
+  if (production) {
+    app.use(vhost('api.vazir.io', function (req, res) {}));
+  }
 
   const port = configService.get<string>('PORT', '3780');
 
