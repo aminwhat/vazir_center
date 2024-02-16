@@ -24,4 +24,8 @@ export class HessabService {
     );
     return { update: nextVersion };
   }
+
+  async getInfo(key: string): Promise<string> {
+    return await this.hessabdbService.getInfo(key);
+  }
 }

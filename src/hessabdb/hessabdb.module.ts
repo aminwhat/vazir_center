@@ -10,6 +10,8 @@ import {
   ProjectSchema,
   CommingSoon,
   CommingSoonSchema,
+  Info,
+  InfoSchema,
 } from 'src/common/schemas';
 
 @Global()
@@ -21,6 +23,7 @@ import {
         { name: Log.name, schema: LogSchema },
         { name: Project.name, schema: ProjectSchema },
         { name: CommingSoon.name, schema: CommingSoonSchema },
+        { name: Info.name, schema: InfoSchema },
       ],
       'hessab',
     ),

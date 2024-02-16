@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model } from 'mongoose';
-import { Log, Client, Project, CommingSoon } from 'src/common/schemas';
+import { Log, Client, Project, CommingSoon, Info } from 'src/common/schemas';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -54,6 +54,16 @@ export class HessabdbService implements OnModuleInit {
     //     }
     //   }
     // }
+
+    const info = await this.infoModel.findOne().exec();
+    if (!info) {
+      const projectsScreenInfo = new this.infoModel({
+        key: 'dashboard_screen',
+        uri: 'https://vazir.io/docs',
+      });
+
+      await projectsScreenInfo.save();
+    }
   }
 
   constructor(
@@ -63,6 +73,7 @@ export class HessabdbService implements OnModuleInit {
     @InjectModel(Project.name, 'hessab') private projectModel: Model<Project>,
     @InjectModel(CommingSoon.name, 'hessab')
     private commingSoonModel: Model<CommingSoon>,
+    @InjectModel(Info.name, 'hessab') private infoModel: Model<Info>,
     private configService: ConfigService,
   ) {}
 
@@ -115,5 +126,10 @@ export class HessabdbService implements OnModuleInit {
       request_ip: request_ip,
     });
     await comming_soon.save();
+  }
+
+  async getInfo(key: string): Promise<string> {
+    const info = await this.infoModel.findOne({ key: key }).exec();
+    return info.uri;
   }
 }

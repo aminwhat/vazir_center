@@ -36,7 +36,7 @@ export class HessabGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server;
 
   @SubscribeMessage('update_exists')
-  async handleMessage(
+  async updateExists(
     @ConnectedSocket() client: any,
     @MessageBody() payload: any,
   ) {
@@ -49,5 +49,10 @@ export class HessabGateway implements OnGatewayConnection, OnGatewayDisconnect {
       exists = true;
     }
     this.server.emit('update_exists', { exists: exists, update: update });
+  }
+
+  @SubscribeMessage('get_info')
+  async getInfo(@ConnectedSocket() client: any, @MessageBody() payload: any) {
+    this.server.emit('get_info', await this.hessabService.getInfo(payload));
   }
 }
