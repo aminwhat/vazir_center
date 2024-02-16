@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as morgan from 'morgan';
+import * as vhost from 'vhost';
 import * as clc from 'cli-color';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -60,6 +61,7 @@ async function bootstrap(production: boolean): Promise<void> {
   // );
   // app.use(passport.initialize());
   // app.use(passport.session());
+  app.use(vhost('api.vazir.io', function (req, res) {}));
 
   const port = configService.get<string>('PORT', '3780');
 
