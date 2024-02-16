@@ -10,6 +10,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApiModule } from './api/api.module';
 import { HessabModule } from './hessab/hessab.module';
+import { NoktehModule } from './nokteh/nokteh.module';
 
 @Module({
   imports: [
@@ -47,9 +48,15 @@ import { HessabModule } from './hessab/hessab.module';
       dbName: 'hessab',
       authMechanism: Boolean(process.env.PRODUCTION) ? null : 'DEFAULT',
     }),
+    MongooseModule.forRoot(process.env.DB_CONNECTION_STRING, {
+      connectionName: 'nokteh',
+      dbName: 'nokteh',
+      authMechanism: Boolean(process.env.PRODUCTION) ? null : 'DEFAULT',
+    }),
     HessabdbModule,
     ApiModule,
     HessabModule,
+    NoktehModule,
   ],
   controllers: [AppController],
   providers: [AppService],
