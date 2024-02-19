@@ -1,8 +1,8 @@
-import { Body, Controller, Ip, Post } from '@nestjs/common';
+import { Body, Controller, Ip, Post, Get } from '@nestjs/common';
 import { ApiService } from './api.service';
 import { CommingSoonDto } from './dto';
 
-@Controller('api')
+@Controller('v0/api')
 export class ApiController {
   constructor(private apiService: ApiService) {}
 
@@ -16,5 +16,17 @@ export class ApiController {
       commingSoonDto.ip,
       request_ip,
     );
+  }
+
+  @Get('release')
+  async get_release(): Promise<{
+    version: string;
+    download_uri: string;
+    date_release: string;
+    file_size: string;
+    os: string;
+    access: string;
+  }> {
+    return await this.apiService.get_release();
   }
 }

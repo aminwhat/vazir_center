@@ -26,6 +26,14 @@ export class HessabdbService implements OnModuleInit {
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImFwcCI6InZhemlyIn0.eyJ2ZXJzaW9uIjoiMC4wLjAiLCJuYW1lIjoiaW5pdGlhbCIsImNvZGUiOjEyMzQ1Njc4OX0.FOakdKhTPYwrZDGpV9Yb337oU-qjWJRfaQxcOuuDmug',
         download_uri:
           'https://github.com/aminwhat/vazir_hessab/releases/download/0.0.1/Vazir.Hessab.exe',
+        options: {
+          access: 'حافظه داخلی, اینترنت',
+          date_release: 'Nov 6, 2023',
+          file_size: '12.7 MB',
+          os: 'Windows 10 & 11',
+          release_log_uri:
+            'https://github.com/aminwhat/vazir_hessab/releases/tag/0.0.1',
+        },
       });
       await createdClient.save();
     }
@@ -131,5 +139,17 @@ export class HessabdbService implements OnModuleInit {
   async getInfo(key: string): Promise<string> {
     const info = await this.infoModel.findOne({ key: key }).exec();
     return info.uri;
+  }
+
+  async getRelease(): Promise<Client> {
+    const clients = await this.clientModel
+      .find()
+      .sort({ version_index: -1 })
+      .limit(1)
+      .exec();
+
+    console.log('getRelease');
+
+    return clients[0];
   }
 }

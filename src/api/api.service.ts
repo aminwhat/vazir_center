@@ -14,4 +14,23 @@ export class ApiService {
       request_ip,
     });
   }
+
+  async get_release(): Promise<{
+    version: string;
+    download_uri: string;
+    date_release: string;
+    file_size: string;
+    os: string;
+    access: string;
+  }> {
+    const release = await this.hessabDbService.getRelease();
+    return {
+      version: release.version,
+      download_uri: release.download_uri,
+      access: release.options.access,
+      date_release: release.options.date_release,
+      file_size: release.options.file_size,
+      os: release.options.os,
+    };
+  }
 }

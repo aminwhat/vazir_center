@@ -19,6 +19,24 @@ export class Client {
 
   @Prop({ required: true })
   download_uri: string;
+
+  @Prop({
+    required: true,
+    type: {
+      release_log_uri: String,
+      date_release: String,
+      file_size: String,
+      os: String,
+      access: String,
+    },
+  })
+  options: {
+    release_log_uri: string;
+    date_release: string;
+    file_size: string;
+    os: string;
+    access: string;
+  };
 }
 
 export const ClientSchema = SchemaFactory.createForClass(Client);
