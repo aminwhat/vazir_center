@@ -1,5 +1,4 @@
 
-
 # PRODUCTION DOCKERFILE
 # ---------------------
 # This Dockerfile allows to build a Docker image of the NestJS application

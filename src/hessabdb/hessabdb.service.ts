@@ -19,13 +19,13 @@ export class HessabdbService implements OnModuleInit {
 
     if (!client) {
       const createdClient = new this.clientModel({
-        name: 'initial',
-        version: '0.0.0',
+        name: '0.0.1',
+        version: '0.0.1',
         version_index: 0,
         token:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImFwcCI6InZhemlyIn0.eyJ2ZXJzaW9uIjoiMC4wLjAiLCJuYW1lIjoiaW5pdGlhbCIsImNvZGUiOjEyMzQ1Njc4OX0.FOakdKhTPYwrZDGpV9Yb337oU-qjWJRfaQxcOuuDmug',
         download_uri:
-          'https://github.com/aminwhat/hessab-download/releases/download/Financial-Platform-Init/Vazir.Hessab.exe',
+          'https://github.com/aminwhat/vazir_hessab/releases/download/0.0.1/Vazir.Hessab.exe',
       });
       await createdClient.save();
     }

@@ -8,13 +8,30 @@ export type ProjectDocument = HydratedDocument<Project>;
 @Schema()
 export class Project {
   @Prop()
-  name: string;
+  title: string;
 
   @Prop()
-  description: string;
+  description?: string;
 
   @Prop()
   companyName: string;
+
+  @Prop()
+  index: number;
+
+  @Prop({
+    type: {
+      theType: ['DATABASE', 'ANALYTICS', 'CRM'],
+      cloud: Boolean,
+    },
+  })
+  project_type: {
+    theType: ['DATABASE', 'ANALYTICS', 'CRM'];
+    cloud: boolean;
+  };
+
+  @Prop()
+  user_id: string;
 
   @Prop({
     type: {

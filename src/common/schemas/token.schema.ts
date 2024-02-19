@@ -6,6 +6,9 @@ export type TokenDocument = HydratedDocument<Token>;
 
 @Schema()
 export class Token {
+  @Prop()
+  user_id?: string;
+
   @Prop({ type: ObjectId, required: true, index: true })
   client_id: string;
 
