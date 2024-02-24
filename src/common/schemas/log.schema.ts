@@ -5,7 +5,13 @@ import { JalaaliDateObject } from 'jalaali-js';
 
 export type LogDocument = HydratedDocument<Log>;
 
-@Schema()
+@Schema({
+  timeseries: {
+    timeField: 'timestamp',
+    metaField: 'metadata',
+    granularity: 'seconds',
+  },
+})
 export class Log {
   @Prop()
   message: string;
