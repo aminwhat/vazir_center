@@ -21,12 +21,22 @@ export class Project {
 
   @Prop({
     type: {
-      theType: ['DATABASE', 'ANALYTICS', 'CRM'],
+      theType: [
+        'ACCOUNTING_SIMPLE',
+        'ACCOUNTING_ADVANCED',
+        'ACCOUNTING_ENTERPRISE',
+      ],
+      theTypeTitle: String,
       cloud: Boolean,
     },
   })
   project_type: {
-    theType: ['DATABASE', 'ANALYTICS', 'CRM'];
+    theType: [
+      'ACCOUNTING_SIMPLE',
+      'ACCOUNTING_ADVANCED',
+      'ACCOUNTING_ENTERPRISE',
+    ];
+    theTypeTitle: string;
     cloud: boolean;
   };
 
