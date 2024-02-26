@@ -10,8 +10,6 @@ import { init } from './init';
 import { NotFoundExceptionFilter } from './common/exceptions';
 import * as winston from 'winston';
 import { WinstonModule } from 'nest-winston';
-import * as express from 'express';
-import { join } from 'path';
 // import * as passport from 'passport';
 // import * as csurf from 'csurf';
 
