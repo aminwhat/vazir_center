@@ -1,7 +1,14 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model } from 'mongoose';
-import { Log, Client, Project, CommingSoon, Info } from 'src/common/schemas';
+import { Connection, FilterQuery, Model } from 'mongoose';
+import {
+  Log,
+  Client,
+  Project,
+  CommingSoon,
+  Info,
+  User,
+} from 'src/common/schemas';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -76,6 +83,7 @@ export class HessabdbService implements OnModuleInit {
 
   constructor(
     @InjectConnection('hessab') private connection: Connection,
+    @InjectConnection('hessab') private userModel: Model<User>,
     @InjectModel(Client.name, 'hessab') private clientModel: Model<Client>,
     @InjectModel(Log.name, 'hessab') private logModel: Model<Log>,
     @InjectModel(Project.name, 'hessab') private projectModel: Model<Project>,
@@ -151,5 +159,17 @@ export class HessabdbService implements OnModuleInit {
     console.log('getRelease');
 
     return clients[0];
+  }
+
+  async getUser(
+    user: FilterQuery<User>,
+    items?: string[],
+  ): Promise<{ succeed: boolean; data?: User }> {
+    try {
+      const theUser = await this.userModel.findOne(user, items).exec();
+      return { succeed: true, data: theUser };
+    } catch (error) {
+      return { succeed: false };
+    }
   }
 }

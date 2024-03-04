@@ -16,7 +16,7 @@ export async function bootstrap(production: boolean): Promise<void> {
   const app = await NestFactory.create(AppModule, {
     cors: {
       origin: '*',
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      methods: 'GET,HEAD,PUT,POST,DELETE',
       preflightContinue: false,
       optionsSuccessStatus: 204,
       credentials: true,

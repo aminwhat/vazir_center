@@ -7,9 +7,10 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-
 import { Socket, Server } from 'socket.io';
 import { HessabService } from './hessab.service';
+import { FilterQuery } from 'mongoose';
+import { User } from 'src/common/schemas';
 
 @WebSocketGateway({ namespace: 'hessab.v0', transports: ['websocket'] })
 export class HessabGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -37,7 +38,7 @@ export class HessabGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('update_exists')
   async updateExists(
-    @ConnectedSocket() client: any,
+    @ConnectedSocket() client: Socket,
     @MessageBody() payload: any,
   ) {
     const { update } = await this.hessabService.updateExists(
@@ -52,7 +53,25 @@ export class HessabGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('get_info')
-  async getInfo(@ConnectedSocket() client: any, @MessageBody() payload: any) {
+  async getInfo(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: any,
+  ) {
     this.server.emit('get_info', await this.hessabService.getInfo(payload));
+  }
+
+  @SubscribeMessage('user_info')
+  async userSession(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: any,
+  ) {
+    let user: FilterQuery<User> = null;
+    if (!payload.user_id) {
+      await this.hessabService.setUserSession(client.id);
+    } else {
+      await this.hessabService.setUserSession(payload.user_id);
+      user = await this.hessabService.getUserInfoById(payload.user_id);
+    }
+    this.server.emit('user_info', user);
   }
 }

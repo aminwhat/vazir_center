@@ -5,21 +5,21 @@ import { JalaaliDateObject } from 'jalaali-js';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({ autoIndex: true })
 export class User {
   @Prop()
   name: string;
 
-  @Prop()
+  @Prop({ unique: true })
   phoneNumber: string;
 
-  @Prop()
+  @Prop({ unique: true })
   nationalId: string;
 
-  @Prop()
+  @Prop({ unique: true })
   email: string;
 
-  @Prop()
+  @Prop({ unique: true })
   username: string;
 
   @Prop()
@@ -32,7 +32,6 @@ export class User {
       jd: Number,
     },
     default: jalaali.toJalaali(new Date()),
-    index: true,
   })
   createdDate?: JalaaliDateObject;
 }

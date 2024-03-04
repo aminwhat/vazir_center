@@ -4,7 +4,7 @@ import * as jalaali from 'jalaali-js';
 
 export type CommingSoonDocument = HydratedDocument<CommingSoon>;
 
-@Schema()
+@Schema({ autoIndex: true })
 export class CommingSoon {
   @Prop({ required: true })
   phoneNumber: string;
@@ -22,7 +22,6 @@ export class CommingSoon {
       jd: Number,
     },
     default: jalaali.toJalaali(new Date()),
-    index: true,
   })
   createdDate: jalaali.JalaaliDateObject;
 

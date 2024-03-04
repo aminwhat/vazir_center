@@ -5,7 +5,7 @@ import { JalaaliDateObject } from 'jalaali-js';
 
 export type ProjectDocument = HydratedDocument<Project>;
 
-@Schema()
+@Schema({ autoIndex: true })
 export class Project {
   @Prop()
   title: string;
@@ -68,7 +68,6 @@ export class Project {
       jd: Number,
     },
     default: jalaali.toJalaali(new Date()),
-    index: true,
   })
   createdDate: JalaaliDateObject;
 

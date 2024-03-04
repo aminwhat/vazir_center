@@ -5,7 +5,7 @@ import { JalaaliDateObject } from 'jalaali-js';
 
 export type LogDocument = HydratedDocument<Log>;
 
-@Schema()
+@Schema({ autoIndex: true })
 export class Log {
   @Prop()
   message: string;
@@ -17,7 +17,6 @@ export class Log {
       jd: Number,
     },
     default: jalaali.toJalaali(new Date()),
-    index: true,
   })
   createdDate: JalaaliDateObject;
 

@@ -3,7 +3,7 @@ import { HydratedDocument } from 'mongoose';
 
 export type ClientDocument = HydratedDocument<Client>;
 
-@Schema()
+@Schema({ autoIndex: true })
 export class Client {
   @Prop()
   name: string;
@@ -14,7 +14,7 @@ export class Client {
   @Prop({ required: true, unique: true })
   version: string;
 
-  @Prop({ required: true, index: true, unique: true })
+  @Prop({ required: true, unique: true })
   version_index: number;
 
   @Prop({ required: true })
