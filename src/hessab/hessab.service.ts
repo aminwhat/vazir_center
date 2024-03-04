@@ -1,10 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
+import { Inject, Injectable } from '@nestjs/common';
 import { Client } from 'src/common/schemas';
 import { HessabdbService } from 'src/hessabdb/hessabdb.service';
 
 @Injectable()
 export class HessabService {
-  constructor(private hessabdbService: HessabdbService) {}
+  constructor(
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private hessabdbService: HessabdbService,
+  ) {}
 
   async versionValid(
     version: string,

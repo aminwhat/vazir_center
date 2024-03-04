@@ -1,0 +1,69 @@
+version: '3'
+
+volumes:
+  data:
+    driver: local
+    name: data
+
+networks:
+  center-network:
+    name: center-network
+
+services:
+  server:
+    networks:
+      - center-network
+    image: 'ghcr.io/aminwhat/vazir_center:master'
+    container_name: server
+    restart: always
+    ports:
+      - 3779:3779
+      # - 3780:3780
+    # env_file:
+    #   - ./.env.production
+    depends_on:
+      - db
+
+  db:
+    networks:
+      - center-network
+    image: mongo:6.0
+    volumes:
+      - data:/data/db
+    container_name: db
+    restart: always
+    hostname: db
+    expose:
+      - 27117:27017
+    ports:
+      - 27117:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=aminwhat
+      - MONGO_INITDB_ROOT_PASSWORD=amin5623
+    # depends_on:
+    #   - cache
+
+  # cache:
+  #   networks:
+  #     - center-network
+  #   image: redislabs/redismod
+  #   container_name: cache
+  #   restart: always
+  #   ports:
+  #     - '6379:6379'
+  #   volumes:
+  #     - data:/data/redis
+  #   # entrypoint: >
+  #   #   redis-server
+  #   #     --loadmodule /usr/lib/redis/modules/redisai.so
+  #   #       ONNX redisai_onnxruntime/redisai_onnxruntime.so
+  #   #       TF redisai_tensorflow/redisai_tensorflow.so
+  #   #       TFLITE redisai_tflite/redisai_tflite.so
+  #   #       TORCH redisai_torch/redisai_torch.so
+  #   #     --loadmodule /usr/lib/redis/modules/redisearch.so
+  #   #     --loadmodule /usr/lib/redis/modules/redisgraph.so
+  #   #     --loadmodule /usr/lib/redis/modules/redistimeseries.so
+  #   #     --loadmodule /usr/lib/redis/modules/rejson.so
+  #   #     --loadmodule /usr/lib/redis/modules/redisbloom.so
+  #   #     --loadmodule /var/opt/redislabs/lib/modules/redisgears.so
+  #   #     --appendonly yes

@@ -12,14 +12,18 @@ import { ApiModule } from './api/api.module';
 import { HessabModule } from './hessab/hessab.module';
 import { NoktehModule } from './nokteh/nokteh.module';
 import { AdminModule } from './admin/admin.module';
+// import { CacheModule } from '@nestjs/cache-manager';
+// TODO: migrate CacheModule to the Redis
+// import type { RedisClientOptions } from 'redis';
+// import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
   imports: [
+    // CacheModule.register<RedisClientOptions>({
+    //   store: redisStore,
+    // }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'static'),
-    }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'static', 'admin'),
     }),
     ThrottlerModule.forRoot([
       {
