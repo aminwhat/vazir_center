@@ -26,14 +26,30 @@ export async function bootstrap(production: boolean): Promise<void> {
       ? WinstonModule.createLogger({
           transports: [
             new winston.transports.Console(),
-            new winston.transports.File({ filename: 'all.log' }),
+            new winston.transports.File({ filename: 'logs/all.log' }),
+            new winston.transports.File({
+              level: 'debug',
+              filename: 'logs/debug.log',
+            }),
+            new winston.transports.File({
+              level: 'fatal',
+              filename: 'logs/fatal.log',
+            }),
+            new winston.transports.File({
+              level: 'log',
+              filename: 'logs/log.log',
+            }),
+            new winston.transports.File({
+              level: 'verbose',
+              filename: 'logs/verbose.log',
+            }),
             new winston.transports.File({
               level: 'error',
-              filename: 'error.log',
+              filename: 'logs/error.log',
             }),
             new winston.transports.File({
               level: 'warn',
-              filename: 'warn.log',
+              filename: 'logs/warn.log',
             }),
           ],
         })
