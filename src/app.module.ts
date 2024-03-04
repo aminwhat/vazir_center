@@ -45,6 +45,7 @@ import { AdminModule } from './admin/admin.module';
         PORT: Joi.number().default(3779),
         SECRET: Joi.string().default('averylogphrasebiggerthanthirtytwochars'),
         DB_CONNECTION_STRING: Joi.string().default('mongodb://localhost:27117'),
+        REDIS_URL: Joi.string().default('redis://localhost:6379'),
       }),
     }),
     MongooseModule.forRoot(process.env.DB_CONNECTION_STRING, {
