@@ -63,15 +63,17 @@ export class HessabGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('user_info')
   async userSession(
     @ConnectedSocket() client: Socket,
-    @MessageBody() payload: any,
+    @MessageBody('user_id') user_id: string,
   ) {
     let user: FilterQuery<User> = null;
-    if (!payload.user_id) {
+    console.log({ user_id });
+    if (!user_id) {
       await this.hessabService.setUserSession(client.id);
     } else {
-      await this.hessabService.setUserSession(payload.user_id);
-      user = await this.hessabService.getUserInfoById(payload.user_id);
+      await this.hessabService.setUserSession(user_id);
+      user = await this.hessabService.getUserInfoById(user_id);
     }
     this.server.emit('user_info', user);
+    console.log({ user });
   }
 }
