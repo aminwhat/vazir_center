@@ -1,7 +1,8 @@
+use dotenvy::dotenv;
 use serde::{Deserialize, Serialize};
 use socketioxide::{
     extract::{Data, SocketRef, State},
-    SocketIo,
+    SocketIo, TransportType,
 };
 use std::sync::atomic::AtomicUsize;
 use tower::ServiceBuilder;
@@ -49,15 +50,22 @@ impl UserCnt {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    dotenv().expect(".env file not found");
+
     let subscriber = FmtSubscriber::new();
 
     tracing::subscriber::set_global_default(subscriber)?;
 
     info!("Starting server");
 
-    let (layer, io) = SocketIo::builder().with_state(UserCnt::new()).build_layer();
+    let (layer, io) = SocketIo::builder()
+        .transports([TransportType::Websocket])
+        .with_state(UserCnt::new())
+        .build_layer();
 
     io.ns("/", |s: SocketRef| {
+        info!("new connection: {:?}", s.id);
+
         s.on("new message", |s: SocketRef, Data::<String>(msg)| {
             let username = s.extensions.get::<Username>().unwrap().clone();
             let msg = Res::Message {
@@ -108,6 +116,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 };
                 s.broadcast().emit("user left", res).ok();
             }
+
+            info!("connection disconnected: {:?}", s.id);
         });
     });
 
