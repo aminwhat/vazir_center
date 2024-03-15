@@ -1,3 +1,5 @@
+mod client;
+
 use dotenvy::dotenv;
 use serde::{Deserialize, Serialize};
 use socketioxide::{
