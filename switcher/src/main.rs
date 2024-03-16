@@ -35,7 +35,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             // `hyper::rt` IO traits.
             let io = TokioIo::new(stream);
 
-            let out_addr: SocketAddr = ([127, 0, 0, 1], 3000).into();
+            let out_addr: SocketAddr = ([127, 0, 0, 1], 3779).into();
 
             // This is the `Service` that will handle the connection.
             // `service_fn` is a helper to convert a function that
