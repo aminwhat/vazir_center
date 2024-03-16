@@ -1,138 +1,75 @@
-mod client;
+mod env;
 
-use dotenvy::dotenv;
-use serde::{Deserialize, Serialize};
-use socketioxide::{
-    extract::{Data, SocketRef, State},
-    SocketIo, TransportType,
-};
-use std::sync::atomic::AtomicUsize;
-use tower::ServiceBuilder;
-use tower_http::{cors::CorsLayer, services::ServeDir};
-use tracing::info;
-use tracing_subscriber::FmtSubscriber;
+use std::borrow::Borrow;
+use std::convert::Infallible;
+use std::net::SocketAddr;
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
-#[serde(transparent)]
-struct Username(String);
-
-#[derive(Deserialize, Serialize, Debug, Clone)]
-#[serde(rename_all = "camelCase", untagged)]
-enum Res {
-    Login {
-        #[serde(rename = "numUsers")]
-        num_users: usize,
-    },
-    UserEvent {
-        #[serde(rename = "numUsers")]
-        num_users: usize,
-        username: Username,
-    },
-    Message {
-        username: Username,
-        message: String,
-    },
-    Username {
-        username: Username,
-    },
-}
-
-struct UserCnt(AtomicUsize);
-impl UserCnt {
-    fn new() -> Self {
-        Self(AtomicUsize::new(0))
-    }
-    fn add_user(&self) -> usize {
-        self.0.fetch_add(1, std::sync::atomic::Ordering::SeqCst) + 1
-    }
-    fn remove_user(&self) -> usize {
-        self.0.fetch_sub(1, std::sync::atomic::Ordering::SeqCst) - 1
-    }
-}
+use crate::env::Env;
+use http_body_util::Full;
+use hyper::body::Bytes;
+use hyper::server::conn::http1;
+use hyper::service::service_fn;
+use hyper::{Request, Response};
+use hyper_util::rt::TokioIo;
+use mini_redis::{Connection, Frame};
+use tokio::net::{TcpListener, TcpStream};
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    dotenv().expect(".env file not found");
+async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    // TODO: Check About hyper, tokio and tower in rust
+    // todo!("Check About hyper, tokio and tower in rust");
 
-    let subscriber = FmtSubscriber::new();
+    let env = Env::new();
+    let ok = async move {
+        // We create a TcpListener and bind it to 127.0.0.1:PORT
+        let listener = TcpListener::bind(format!("0.0.0.0:{}", &env.check_port())).await?;
 
-    tracing::subscriber::set_global_default(subscriber)?;
+        // We start a loop to continuously accept incoming connections
+        loop {
+            let (stream, _) = listener.accept().await?;
+            println!("New connection from {} to ", stream.peer_addr()?);
+            // process(stream).await;
 
-    info!("Starting server");
+            // Use an adapter to access something implementing `tokio::io` traits as if they implement
+            // `hyper::rt` IO traits.
+            let io = TokioIo::new(stream);
 
-    let (layer, io) = SocketIo::builder()
-        .transports([TransportType::Websocket])
-        .with_state(UserCnt::new())
-        .build_layer();
-
-    io.ns("/", |s: SocketRef| {
-        info!("new connection: {:?}", s.id);
-
-        s.on("new message", |s: SocketRef, Data::<String>(msg)| {
-            let username = s.extensions.get::<Username>().unwrap().clone();
-            let msg = Res::Message {
-                username,
-                message: msg,
-            };
-            s.broadcast().emit("new message", msg).ok();
-        });
-
-        s.on(
-            "add user",
-            |s: SocketRef, Data::<String>(username), user_cnt: State<UserCnt>| {
-                if s.extensions.get::<Username>().is_some() {
-                    return;
+            // Spawn a tokio task to serve multiple connections concurrently
+            tokio::task::spawn(async move {
+                // Finally, we bind the incoming connection to our `hello` service
+                if let Err(err) = http1::Builder::new()
+                    // `service_fn` converts our function in a `Service`
+                    .serve_connection(io, service_fn(on_404))
+                    .await
+                {
+                    println!("Error serving connection: {:?}", err);
                 }
-                let num_users = user_cnt.add_user();
-                s.extensions.insert(Username(username.clone()));
-                s.emit("login", Res::Login { num_users }).ok();
+            });
+        }
 
-                let res = Res::UserEvent {
-                    num_users,
-                    username: Username(username),
-                };
-                s.broadcast().emit("user joined", res).ok();
-            },
-        );
+        #[allow(unreachable_code)]
+        Ok(())
+    };
 
-        s.on("typing", |s: SocketRef| {
-            let username = s.extensions.get::<Username>().unwrap().clone();
-            s.broadcast()
-                .emit("typing", Res::Username { username })
-                .ok();
-        });
+    println!("Listening on port: {}", &env.check_port());
 
-        s.on("stop typing", |s: SocketRef| {
-            let username = s.extensions.get::<Username>().unwrap().clone();
-            s.broadcast()
-                .emit("stop typing", Res::Username { username })
-                .ok();
-        });
+    ok.await
+}
 
-        s.on_disconnect(|s: SocketRef, user_cnt: State<UserCnt>| {
-            if let Some(username) = s.extensions.get::<Username>() {
-                let num_users = user_cnt.remove_user();
-                let res = Res::UserEvent {
-                    num_users,
-                    username: username.clone(),
-                };
-                s.broadcast().emit("user left", res).ok();
-            }
+async fn process(stream: TcpStream) {
+    // The `Connection` lets us read/write redis **frames** instead of
+    // byte streams. The `Connection` type is defined by mini-redis.
+    let mut connection = Connection::new(stream);
 
-            info!("connection disconnected: {:?}", s.id);
-        });
-    });
+    if let Some(frame) = connection.read_frame().await.unwrap() {
+        println!("GOT: {:?}", frame);
 
-    let app = axum::Router::new()
-        .nest_service("/", ServeDir::new("dist"))
-        .layer(
-            ServiceBuilder::new()
-                .layer(CorsLayer::permissive()) // Enable CORS policy
-                .layer(layer),
-        );
+        // Respond with an error
+        let response = Frame::Error("unimplemented".to_string());
+        connection.write_frame(&response).await.unwrap();
+    }
+}
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
-    axum::serve(listener, app).await.unwrap();
-
-    Ok(())
+async fn on_404(_: Request<hyper::body::Incoming>) -> Result<Response<Full<Bytes>>, Infallible> {
+    Ok(Response::new(Full::new(Bytes::from("Hello, World!"))))
 }
