@@ -29,7 +29,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         loop {
             let (stream, _) = listener.accept().await?;
             // process(stream).await;
-            println!("New connection from {} to", stream.peer_addr().unwrap(),);
+
+            let remote_addr = stream.peer_addr().unwrap();
 
             // Use an adapter to access something implementing `tokio::io` traits as if they implement
             // `hyper::rt` IO traits.
@@ -48,6 +49,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
                         .path_and_query()
                         .map(|x| x.as_str())
                         .unwrap_or("/")
+                        .replacen("/socket.io", "", 1)
+                );
+
+                println!(
+                    "New connection from {} to {}",
+                    remote_addr,
+                    uri_string.clone()
                 );
 
                 let uri = uri_string.parse().unwrap();
