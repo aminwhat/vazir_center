@@ -1,5 +1,2 @@
-dev-init:
-	cargo install cargo-watch
-
 dev:
-	cargo watch -x run
+	nodemon --exec go run main.go
