@@ -11,10 +11,16 @@ RUN go mod download
 
 # Copy the source code. Note the slash at the end, as explained in
 # https://docs.docker.com/reference/dockerfile/#copy
-COPY *.go ./
+# COPY *.go ./
+COPY . .
 
 # Build
 RUN CGO_ENABLED=0 GOOS=linux go build -o /vazir_switcher
+
+LABEL org.opencontainers.image.source = "https://github.com/aminwhat/vazir_switcher"
+
+RUN mv .env.production .env
+
 
 # Optional:
 # To bind to a TCP port, runtime parameters must be supplied to the docker command.
@@ -22,11 +28,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /vazir_switcher
 # the application is going to listen on by default.
 # https://docs.docker.com/reference/dockerfile/#expose
 EXPOSE 8080
-
-
-LABEL org.opencontainers.image.source = "https://github.com/aminwhat/vazir_switcher"
-
-RUN mv .env.production .env
 
 # Run
 CMD ["/vazir_switcher"]
