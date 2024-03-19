@@ -7,6 +7,27 @@ on:
     branches: ["dev", "master"]
 
 jobs:
+  switcher:
+    needs: hessab
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: switcher
+
+    steps:
+      - name: Copy repository
+        uses: actions/checkout@v4
+
+      - name: Rust Init
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cargo Check
+        uses: cargo check
+
+      - name: Cargo test
+        uses: cargo test --all-features
+
   hessab:
     needs: console
     runs-on: ubuntu-latest
