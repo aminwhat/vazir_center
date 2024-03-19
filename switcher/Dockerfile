@@ -3,6 +3,8 @@ FROM rust:1.76
 WORKDIR /usr/src/switcher
 COPY . .
 
+RUN cargo check
+
 RUN cargo install --path .
 
 RUN mv .env.production .env
