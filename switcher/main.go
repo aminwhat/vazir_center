@@ -5,9 +5,16 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	remote, err := url.Parse("https://google.com")
 	if err != nil {
 		panic(err)

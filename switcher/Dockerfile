@@ -23,5 +23,10 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /vazir_switcher
 # https://docs.docker.com/reference/dockerfile/#expose
 EXPOSE 8080
 
+
+LABEL org.opencontainers.image.source = "https://github.com/aminwhat/vazir_switcher"
+
+RUN mv .env.production .env
+
 # Run
 CMD ["/vazir_switcher"]
