@@ -13,11 +13,16 @@ use tokio::net::TcpStream;
 
 use crate::common::body::Body;
 use crate::common::io_type::IOTypeNotSend;
+use crate::core::env::Env;
 
-pub async fn http2_server() -> Result<(), Box<dyn std::error::Error>> {
+pub async fn http2_server(env: &Env) -> Result<(), Box<dyn std::error::Error>> {
     let mut stdout = io::stdout();
 
-    let addr: SocketAddr = ([127, 0, 0, 1], 3000).into();
+    let addr: SocketAddr = (
+        [127, 0, 0, 1],
+        env.check_http2_port().parse::<u16>().unwrap(),
+    )
+        .into();
     // Using a !Send request counter is fine on 1 thread...
     let counter = Rc::new(Cell::new(0));
 

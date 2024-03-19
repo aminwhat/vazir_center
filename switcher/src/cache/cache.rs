@@ -1,4 +1,4 @@
-use redis::ConnectionLike;
+use redis::{ConnectionLike, JsonCommands, RedisResult, ToRedisArgs};
 
 use crate::core::env::Env;
 
@@ -14,5 +14,14 @@ impl Cache {
         let conn = client.get_connection().unwrap();
         println!("Cache is Connected: {}", conn.get_db());
         Self { client, conn }
+    }
+
+    pub fn get_user_connection(&mut self, token: String) -> String {
+        let user_connection: &String = &self
+            .conn
+            .json_get(format!("Connection:{}", token), "$")
+            .unwrap();
+
+        user_connection.clone()
     }
 }

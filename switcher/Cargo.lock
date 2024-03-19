@@ -1046,6 +1046,8 @@ dependencies = [
  "rustls-pemfile",
  "rustls-pki-types",
  "ryu",
+ "serde",
+ "serde_json",
  "sha1_smol",
  "socket2",
  "tokio",
@@ -1417,6 +1419,7 @@ name = "switcher"
 version = "0.1.0"
 dependencies = [
  "dotenvy",
+ "http",
  "http-body-util",
  "hyper",
  "hyper-util",

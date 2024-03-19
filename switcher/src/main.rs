@@ -1,6 +1,7 @@
 mod cache;
 mod common;
 mod core;
+mod errors;
 mod servers;
 
 use crate::core::env::Env;
@@ -33,7 +34,7 @@ async fn main() {
 
         // Combine it with a `LocalSet,  which means it can spawn !Send futures...
         let local = tokio::task::LocalSet::new();
-        local.block_on(&rt, http2_server()).unwrap();
+        local.block_on(&rt, http2_server(env)).unwrap();
     });
 
     let client_http2 = thread::spawn(move || {
@@ -67,7 +68,7 @@ async fn main() {
 
         // Combine it with a `LocalSet,  which means it can spawn !Send futures...
         let local = tokio::task::LocalSet::new();
-        local.block_on(&rt, http1_server()).unwrap();
+        local.block_on(&rt, http1_server(env)).unwrap();
     });
 
     let client_http1 = thread::spawn(move || {

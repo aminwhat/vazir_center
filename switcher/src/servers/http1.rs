@@ -12,9 +12,13 @@ use tokio::net::TcpStream;
 
 use crate::common::body::Body;
 use crate::common::io_type::IOTypeNotSend;
+use crate::core::env::Env;
 
-pub async fn http1_server() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3001));
+pub async fn http1_server(env: &Env) -> Result<(), Box<dyn std::error::Error>> {
+    let addr = SocketAddr::from((
+        [0, 0, 0, 0],
+        env.check_http1_port().parse::<u16>().unwrap_or(2999),
+    ));
 
     let listener = TcpListener::bind(addr).await?;
 

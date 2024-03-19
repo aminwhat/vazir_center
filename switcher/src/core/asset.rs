@@ -11,7 +11,8 @@ impl Asset {
         Self { archive }
     }
 
-    pub fn unknown_error_html(&self) {
+    pub fn unknown_error_html(&self) -> &[u8] {
         let html = &self.archive.get("unkown_error.html").unwrap();
+        *html
     }
 }
