@@ -1,4 +1,4 @@
-FROM rust:1.67
+FROM rust:1.76-alpine
 
 WORKDIR /usr/src/switcher
 COPY . .
