@@ -37,17 +37,17 @@ services:
     expose:
       - 3779:3779
     depends_on:
-      - db
+      - hessab_db
 
-  db:
+  hessab_db:
     networks:
       - center-network
     image: mongo:6.0
     volumes:
       - data:/data/db
-    container_name: db
+    container_name: hessab_db
     restart: always
-    hostname: db
+    hostname: hessab_db
     expose:
       - 27117:27017
     ports:

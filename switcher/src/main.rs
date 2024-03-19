@@ -1,21 +1,27 @@
+mod cache;
 mod common;
-mod env;
-mod http1;
-mod http2;
+mod core;
+mod servers;
 
-use crate::env::Env;
-use http1::{http1_client, http1_server};
-use http2::{http2_client, http2_server};
+use crate::core::env::Env;
+use cache::cache::Cache;
+use core::asset::Asset;
+use servers::{
+    http1::{http1_client, http1_server},
+    http2::{http2_client, http2_server},
+};
 use std::thread;
+
+// TODO: Check About hyper, tokio and tower in rust
+// todo!("Check About hyper, tokio and tower in rust");
 
 #[tokio::main]
 async fn main() {
-    // TODO: Check About hyper, tokio and tower in rust
-    // todo!("Check About hyper, tokio and tower in rust");
-
     //* Init */
     pretty_env_logger::init();
-    Env::new();
+    let env = Env::new();
+    Asset::new();
+    Cache::new();
 
     //* http2 */
     let server_http2 = thread::spawn(move || {
@@ -42,7 +48,11 @@ async fn main() {
         local
             .block_on(
                 &rt,
-                http2_client("http://localhost:3000".parse::<hyper::Uri>().unwrap()),
+                http2_client(
+                    format!("http://localhost:{}", env.check_http2_port())
+                        .parse::<hyper::Uri>()
+                        .unwrap(),
+                ),
             )
             .unwrap();
     });
@@ -72,7 +82,11 @@ async fn main() {
         local
             .block_on(
                 &rt,
-                http1_client("http://localhost:3001".parse::<hyper::Uri>().unwrap()),
+                http1_client(
+                    format!("http://localhost:{}", env.check_http1_port())
+                        .parse::<hyper::Uri>()
+                        .unwrap(),
+                ),
             )
             .unwrap();
     });
