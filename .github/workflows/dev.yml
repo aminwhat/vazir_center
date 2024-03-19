@@ -2,13 +2,13 @@ name: dev
 
 on:
   push:
-    branches: ['dev', 'master']
+    branches: ["dev", "master"]
   pull_request:
-    branches: ['dev', 'master']
+    branches: ["dev", "master"]
 
 jobs:
-  center:
-    needs: panel
+  hessab:
+    needs: console
     runs-on: ubuntu-latest
 
     defaults:
@@ -46,12 +46,12 @@ jobs:
     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  panel:
+  console:
     runs-on: ubuntu-latest
 
     defaults:
       run:
-        working-directory: panel
+        working-directory: console
 
     steps:
       - uses: actions/checkout@v3
