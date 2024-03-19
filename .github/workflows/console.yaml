@@ -1,4 +1,4 @@
-name: hessab
+name: console
 
 on:
   push:
