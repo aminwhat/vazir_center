@@ -23,10 +23,10 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Cargo Check
-        uses: cargo check
+        run: cargo check
 
       - name: Cargo test
-        uses: cargo test --all-features
+        run: cargo test --all-features
 
   hessab:
     needs: console
