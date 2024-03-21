@@ -1,15 +1,5 @@
 import * as clc from 'cli-color';
 import * as dotenv from 'dotenv';
-import * as redis from 'ioredis';
-
-async function redis_init() {
-  const client = new redis.Redis({ host: 'localhost', port: 6379 });
-  try {
-    await client.connect();
-  } catch (error) {
-    Abort(error);
-  }
-}
 
 function Abort(error: any): void {
   console.log('\n');

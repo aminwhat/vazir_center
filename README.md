@@ -1,9 +1,5 @@
 # Vazir Center
 
-## Switcher
-
-Detector of the connection what where should comming connection(rest api/socket) goes and send back the response
-
 ## hessab
 
 Specific Source for Vazir hessab(Vazir Financial Platform),

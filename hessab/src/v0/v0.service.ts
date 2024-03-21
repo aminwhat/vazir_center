@@ -4,7 +4,7 @@ import { Client, User } from 'src/common/schemas';
 import { HessabdbService } from 'src/hessabdb/hessabdb.service';
 
 @Injectable()
-export class HessabService {
+export class V0Service {
   constructor(private hessabdbService: HessabdbService) {}
 
   async versionValid(

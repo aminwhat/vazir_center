@@ -8,15 +8,13 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { HessabService } from './hessab.service';
-import { FilterQuery } from 'mongoose';
-import { User } from 'src/common/schemas';
+import { V0Service } from './v0.service';
 
-@WebSocketGateway({ namespace: 'hessab.v0', transports: ['websocket'] })
-export class HessabGateway implements OnGatewayConnection, OnGatewayDisconnect {
+@WebSocketGateway({ namespace: 'v0', transports: ['websocket'] })
+export class V0Gateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleConnection(@ConnectedSocket() client: Socket) {
     console.log('Hessab Client Connected: ' + client.id);
-    const { versionExists } = await this.hessabService.versionValid(
+    const { versionExists } = await this.v0Service.versionValid(
       client.handshake.auth.version,
       client.handshake.auth.token,
     );
@@ -31,7 +29,7 @@ export class HessabGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log('Hessab Client Disconnect: ' + client.id);
   }
 
-  constructor(private hessabService: HessabService) {}
+  constructor(private v0Service: V0Service) {}
 
   @WebSocketServer()
   server: Server;
@@ -41,7 +39,7 @@ export class HessabGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: any,
   ) {
-    const { update } = await this.hessabService.updateExists(
+    const { update } = await this.v0Service.updateExists(
       client.handshake.auth.version,
       client.handshake.auth.token,
     );
@@ -57,7 +55,7 @@ export class HessabGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: any,
   ) {
-    this.server.emit('get_info', await this.hessabService.getInfo(payload));
+    this.server.emit('get_info', await this.v0Service.getInfo(payload));
   }
 
   @SubscribeMessage('user_info')
@@ -65,14 +63,7 @@ export class HessabGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() client: Socket,
     @MessageBody('user_id') user_id: string,
   ) {
-    let user: FilterQuery<User> = null;
-    console.log({ user_id });
-    if (!user_id) {
-      await this.hessabService.setUserSession(client.id);
-    } else {
-      await this.hessabService.setUserSession(user_id);
-      user = await this.hessabService.getUserInfoById(user_id);
-    }
+    const user = await this.v0Service.getUserInfoById(user_id);
     this.server.emit('user_info', user);
     console.log({ user });
   }

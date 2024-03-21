@@ -9,8 +9,8 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApiModule } from './api/api.module';
-import { HessabModule } from './hessab/hessab.module';
 import { AdminModule } from './admin/admin.module';
+import { V0Module } from './v0/v0.module';
 
 @Module({
   imports: [
@@ -56,8 +56,8 @@ import { AdminModule } from './admin/admin.module';
     }),
     HessabdbModule,
     ApiModule,
-    HessabModule,
     AdminModule,
+    V0Module,
   ],
   controllers: [AppController],
   providers: [AppService],
