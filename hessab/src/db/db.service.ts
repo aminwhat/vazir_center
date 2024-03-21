@@ -12,7 +12,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class HessabdbService implements OnModuleInit {
+export class DbService implements OnModuleInit {
   async onModuleInit(): Promise<void> {
     const log = await this.logModel.findOne().exec();
     if (!log) {

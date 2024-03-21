@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { HessabdbService } from 'src/hessabdb/hessabdb.service';
+import { DbService } from 'src/db/db.service';
 
 @Injectable()
 export class ApiService {
-  constructor(private hessabDbService: HessabdbService) {}
+  constructor(private dbService: DbService) {}
 
   async comming_soon(phoneNumber: string, ip: string, request_ip: string) {
     console.log({ phoneNumber, ip, request_ip });
 
-    await this.hessabDbService.createCommingSoon({
+    await this.dbService.createCommingSoon({
       phoneNumber,
       ip,
       request_ip,
@@ -23,7 +23,7 @@ export class ApiService {
     os: string;
     access: string;
   }> {
-    const release = await this.hessabDbService.getRelease();
+    const release = await this.dbService.getRelease();
     return {
       version: release.version,
       download_uri: release.download_uri,

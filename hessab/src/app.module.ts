@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { HessabdbModule } from './hessabdb/hessabdb.module';
+import { DbModule } from './db/db.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
@@ -51,7 +51,7 @@ dotenv.config();
       dbName: process.env.DB_COMPANY_NAME,
       authMechanism: Boolean(process.env.PRODUCTION) ? null : 'DEFAULT',
     }),
-    HessabdbModule,
+    DbModule,
     ApiModule,
     AdminModule,
     V0Module,

@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { HessabdbService } from './hessabdb.service';
+import { DbService } from './db.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
   Log,
@@ -31,7 +31,7 @@ import {
       'hessab',
     ),
   ],
-  providers: [HessabdbService],
-  exports: [HessabdbService],
+  providers: [DbService],
+  exports: [DbService],
 })
-export class HessabdbModule {}
+export class DbModule {}

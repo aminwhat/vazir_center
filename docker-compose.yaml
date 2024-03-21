@@ -1,17 +1,21 @@
 version: "3"
 
 volumes:
-  data:
-    name: data
+  hessab-data:
+    name: hessab-data
+  nokteh-data:
+    name: nokteh-data
 
 networks:
-  center-network:
-    name: center-network
+  hessab-network:
+    name: hessab-network
+  nokteh-network:
+    name: nokteh-network
 
 services:
   hessab:
     networks:
-      - center-network
+      - hessab-network
     build:
       context: ./hessab
     container_name: hessab
@@ -25,13 +29,44 @@ services:
 
   hessab_db:
     networks:
-      - center-network
+      - hessab-network
     image: mongo:6.0
     volumes:
-      - data:/data/db
+      - hessab-data:/
     container_name: hessab_db
     restart: always
     hostname: hessab_db
+    expose:
+      - 27117:27017
+    ports:
+      - 27117:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=aminwhat
+      - MONGO_INITDB_ROOT_PASSWORD=amin5623
+
+  nokteh:
+    networks:
+      - nokteh-network
+    build:
+      context: ./nokteh
+    container_name: nokteh
+    restart: always
+    ports:
+      - 3779:3779
+    expose:
+      - 3779:3779
+    depends_on:
+      - nokteh_db
+
+  nokteh_db:
+    networks:
+      - nokteh-network
+    image: mongo:6.0
+    volumes:
+      - nokteh-data:/
+    container_name: nokteh_db
+    restart: always
+    hostname: nokteh_db
     expose:
       - 27117:27017
     ports:
