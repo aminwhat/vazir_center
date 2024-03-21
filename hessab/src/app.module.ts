@@ -11,6 +11,8 @@ import { AppService } from './app.service';
 import { ApiModule } from './api/api.module';
 import { AdminModule } from './admin/admin.module';
 import { V0Module } from './v0/v0.module';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Module({
   imports: [
@@ -37,21 +39,16 @@ import { V0Module } from './v0/v0.module';
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
-        PRODUCTION: Joi.boolean().default('true'),
         PORT: Joi.number().default(3779),
         SECRET: Joi.string().default('averylogphrasebiggerthanthirtytwochars'),
         DB_CONNECTION_STRING: Joi.string().default('mongodb://localhost:27117'),
-        REDIS_URL: Joi.string().default('redis://localhost:6379'),
+        DB_COMPANY_NAME: Joi.string().default('hessab'),
+        PRODUCTION: Joi.boolean().default('true'),
       }),
     }),
     MongooseModule.forRoot(process.env.DB_CONNECTION_STRING, {
       connectionName: 'hessab',
-      dbName: 'hessab',
-      authMechanism: Boolean(process.env.PRODUCTION) ? null : 'DEFAULT',
-    }),
-    MongooseModule.forRoot(process.env.DB_CONNECTION_STRING, {
-      connectionName: 'nokteh',
-      dbName: 'nokteh',
+      dbName: process.env.DB_COMPANY_NAME,
       authMechanism: Boolean(process.env.PRODUCTION) ? null : 'DEFAULT',
     }),
     HessabdbModule,
