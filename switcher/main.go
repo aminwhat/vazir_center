@@ -1,20 +1,21 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-
-	"github.com/joho/godotenv"
+	"switcher/src/cache"
+	env "switcher/src/env"
 )
 
-func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+func init() {
+	env.Init()
+	cache.Init()
+}
 
+func main() {
 	remote, err := url.Parse("https://google.com")
 	if err != nil {
 		panic(err)
@@ -31,7 +32,8 @@ func main() {
 
 	proxy := httputil.NewSingleHostReverseProxy(remote)
 	http.HandleFunc("/", handler(proxy))
-	err = http.ListenAndServe(":8080", nil)
+	fmt.Println("\nServer listening on port :" + env.GetHttp1Port())
+	err = http.ListenAndServe(":"+env.GetHttp1Port(), nil)
 	if err != nil {
 		panic(err)
 	}
