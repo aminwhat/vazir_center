@@ -1,15 +1,11 @@
-import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { FilterQuery } from 'mongoose';
 import { Client, User } from 'src/common/schemas';
 import { HessabdbService } from 'src/hessabdb/hessabdb.service';
 
 @Injectable()
 export class HessabService {
-  constructor(
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
-    private hessabdbService: HessabdbService,
-  ) {}
+  constructor(private hessabdbService: HessabdbService) {}
 
   async versionValid(
     version: string,
@@ -32,30 +28,6 @@ export class HessabService {
 
   async getInfo(key: string): Promise<string> {
     return await this.hessabdbService.getInfo(key);
-  }
-
-  async getUserSession(user_id: string): Promise<{
-    succeed: boolean;
-    data?: { lastSeen: Date };
-    message?: string;
-  }> {
-    const userSession: { lastSeen: Date } = await this.cacheManager.get(
-      `Session:${user_id}`,
-    );
-
-    if (!userSession) {
-      return { succeed: false, message: 'The userSession does not exists' };
-    }
-
-    return { succeed: true, data: userSession };
-  }
-
-  async setUserSession(user_id: string) {
-    await this.cacheManager.set(
-      `Session:${user_id}`,
-      { lastSeen: new Date().toUTCString() },
-      2600,
-    );
   }
 
   async getUserInfoById(user_id: string): Promise<FilterQuery<User>> {
