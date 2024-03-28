@@ -21,56 +21,11 @@
         padding-top: 100px;
       }
 
-      .amin-text {
-        @apply text-4xl;
-      }
-
-      .error-emoji {
-        --mdc-typography-button-font-size: 16px;
-        --mdc-theme-text-primary-on-background: #3c4043;
-        letter-spacing: normal;
-        text-align: center;
-        box-sizing: inherit;
-        margin: 0;
-        padding: 0;
-        border: 0;
-        vertical-align: baseline;
-        color: #aeafb3;
-        font:
-          200px/1.25 Google Sans,
-          Helvetica Neue,
-          sans-serif;
-        margin-bottom: 24px;
-      }
-
       @media (max-width: 460px) {
         :root {
           padding-left: 5px;
           padding-right: 5px;
           padding-top: 150px;
-        }
-
-        .amin-text {
-          @apply text-2xl;
-        }
-
-        .error-emoji {
-          --mdc-typography-button-font-size: 16px;
-          --mdc-theme-text-primary-on-background: #3c4043;
-          letter-spacing: normal;
-          text-align: center;
-          box-sizing: inherit;
-          margin: 0;
-          padding: 0;
-          border: 0;
-          vertical-align: baseline;
-          color: #aeafb3;
-          font:
-            200px/1.25 Google Sans,
-            Helvetica Neue,
-            sans-serif;
-          margin-bottom: 24px;
-          font-size: 62px;
         }
       }
 
@@ -88,33 +43,10 @@
           padding-right: 5px;
           padding-top: 150px;
         }
-
-        .amin-text {
-          @apply text-3xl;
-        }
-
-        .error-emoji {
-          --mdc-typography-button-font-size: 16px;
-          --mdc-theme-text-primary-on-background: #3c4043;
-          letter-spacing: normal;
-          text-align: center;
-          box-sizing: inherit;
-          margin: 0;
-          padding: 0;
-          border: 0;
-          vertical-align: baseline;
-          color: #aeafb3;
-          font:
-            200px/1.25 Google Sans,
-            Helvetica Neue,
-            sans-serif;
-          margin-bottom: 24px;
-          font-size: 100px;
-        }
       }
     </style>
 
-    <title>پلتفرم مالی وزیر</title>
+    <title>پلتفرم وزیر</title>
   </head>
 
   <body>
@@ -570,6 +502,13 @@
       </text>
     </svg>
 
+    <script>
+      const statusCode = window.performance.getEntries()[0].responseStatus;
+      if (statusCode !== 404) {
+        document.getElementById('title').innerHTML =
+          `${statusCode} :خطای ناشناخته`;
+      }
+    </script>
     <!-- <h1 id="title">404 Page not found</h1> -->
     <!-- <button id="newBtn" class="btn" disabled>&#8594; &nbsp;Back to Home</button> -->
 
