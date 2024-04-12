@@ -1,0 +1,17 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: db
+    hostname: db
+    ports:
+      - 27017:27017
+    restart: always
+
+  redis:
+    image: redislabs/redismod
+    container_name: cache
+    hostname: cache
+    ports:
+      - 6379:6379
+    restart: always
